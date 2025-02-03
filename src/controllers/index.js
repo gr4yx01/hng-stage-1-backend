@@ -14,7 +14,7 @@ const classifyNumber = async (req, res) => {
 
     const response = await axios.get(`http://numbersapi.com/${number}/math`)
 
-    res.json({
+    res.status(200).json({
         "number": Number(number),
         "is_prime": isPrime(number),
         "is_perfect": isPerfectNumber(number),
