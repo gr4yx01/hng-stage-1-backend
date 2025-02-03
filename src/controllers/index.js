@@ -4,6 +4,14 @@ import { getNumberProperties, isPerfectNumber, isPrime, sumOfDigits } from "../h
 const classifyNumber = async (req, res) => {
     const { number } = req.query
 
+    if(isNaN(number)) {
+        res.status(400).json({
+            "number": "alphabet",
+            "error": true
+        })
+        return
+    }
+
     const response = await axios.get(`http://numbersapi.com/${number}/math`)
 
     res.json({
