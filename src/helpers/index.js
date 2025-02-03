@@ -1,27 +1,30 @@
 function isPerfectNumber(num) {
     if (num <= 1) return false; // 1 and negative numbers aren't perfect numbers
     
-    let sum = 0;
+    let sum = 1;  // Start with 1 since it's always a divisor (excluding the number itself)
+    let sqrtNum = Math.sqrt(num);
     
-    for (let i = 1; i <= Math.floor(num / 2); i++) {
+    for (let i = 2; i <= sqrtNum; i++) {
         if (num % i === 0) {
-            sum += i; // Add the divisor to the sum
+            sum += i;
+            if (i !== num / i) {
+                sum += num / i; // Add the paired divisor
+            }
         }
     }
 
-    // Check if the sum of divisors equals the number
     return sum === num;
 }
 
 function isPrime(num) {
     if (num <= 1) return false; // Numbers less than or equal to 1 are not prime
-    if (num === 2) return true; // 2 is the only even prime number
-    if (num % 2 === 0) return false; // Exclude all even numbers greater than 2
+    if (num === 2 || num === 3) return true; // 2 and 3 are prime numbers
+    if (num % 2 === 0 || num % 3 === 0) return false; // Exclude all numbers divisible by 2 or 3
     
-    // Check odd numbers from 3 to the square root of num
-    for (let i = 3; i <= Math.sqrt(num); i += 2) {
-        if (num % i === 0) {
-            return false; // num is divisible by i, so it's not prime
+    let sqrtNum = Math.sqrt(num);
+    for (let i = 5; i <= sqrtNum; i += 6) {
+        if (num % i === 0 || num % (i + 2) === 0) {
+            return false; // Check divisibility by i and i + 2
         }
     }
 
@@ -32,12 +35,13 @@ function getNumberProperties(num) {
     const properties = [];
 
     // Check for Armstrong property
-    const numStr = num.toString();
-    const numDigits = numStr.length;
+    const numDigits = Math.floor(Math.log10(num)) + 1; // Calculate number of digits efficiently
     let sum = 0;
+    let temp = num;
     
-    for (let digit of numStr) {
-        sum += Math.pow(Number(digit), numDigits);
+    while (temp > 0) {
+        sum += Math.pow(temp % 10, numDigits);  // Add the digit raised to the power of the number of digits
+        temp = Math.floor(temp / 10);  // Remove the last digit
     }
     
     if (sum === num) {
@@ -55,13 +59,15 @@ function getNumberProperties(num) {
 }
 
 function sumOfDigits(num) {
-    // Convert the number to a string to easily loop through its digits
-    const numStr = Math.abs(num).toString(); // Ensure we handle negative numbers by using Math.abs
     let sum = 0;
 
-    // Loop through each character (digit) in the string and sum them
-    for (let digit of numStr) {
-        sum += Number(digit); // Convert each character back to a number and add to the sum
+    // Take the absolute value to handle negative numbers
+    num = Math.abs(num);
+
+    // Use a while loop to sum digits efficiently
+    while (num > 0) {
+        sum += num % 10; // Add the last digit
+        num = Math.floor(num / 10); // Remove the last digit
     }
 
     return sum;
